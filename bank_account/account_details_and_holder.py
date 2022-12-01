@@ -1,7 +1,7 @@
 import datetime
 import random
 
-today = datetime.date.today()
+
 
 ####################################################################################
 #                             AccountHolder
@@ -33,6 +33,8 @@ class AccountDetails:
     def __init__(self, account_number: int, bank_name: str, bank_branch_name: str,
                  bank_branch_number: int, maximum_credit_limit: int = 0, usd_allowes: bool = False, money_in: float = 0, *usd_balance):
         # self.account_number = account_number
+        today = datetime.date.today()
+        
         self.account_number = random.randint(100000, 10000000)
 
         self.bank_name = bank_name
