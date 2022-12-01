@@ -7,7 +7,7 @@ from game_play import GamePlay
 if __name__ == '__main__':
 
     name = None
-    print("Welcome, play tic tac toe")
+    print("Welcome to Tic Tac Toe game\n")
     yes_no = True
     winn_play = False
     bord_full = False
@@ -28,6 +28,7 @@ if __name__ == '__main__':
 
     while yes_no:
 
+        print()
         # get from the user the size of the bord and return num and list of the bord
         bord, bord_size = between.bord_size_print()
 
@@ -43,7 +44,7 @@ if __name__ == '__main__':
         player1_status = player1_play_turn + 1
         player2_status = player2_play_turn + 1
 
-
+        print()
         # between.game_main()
         not_winn = True
         while not_winn:
@@ -82,6 +83,8 @@ if __name__ == '__main__':
             if stuck:
                 not_winn = False
 
+        print()
+
         if winn_play:
             print(f"{name} winn")
 
@@ -99,7 +102,7 @@ if __name__ == '__main__':
         # game.initialize_board()
         # count_num_games += 1
 
-    print("Bye Bye!")
+    print("\nBye Bye!")
 
 
 
