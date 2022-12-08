@@ -76,7 +76,7 @@ def aapl_filse(path):
                 vol = []
                 date_year = date.year
 
-    with open('files\\PL.csv', "w") as csv_f:
+    with open('files\\PL.csv', "w", newline="") as csv_f:
         writer = csv.DictWriter(csv_f, ['Year',  'Avg Price', 'Min Price', 'Max Price', 'Avg Volume',
                                         'Min Volume', 'Max Volume'])
         writer.writeheader()
