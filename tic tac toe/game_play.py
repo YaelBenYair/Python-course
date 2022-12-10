@@ -110,13 +110,26 @@ class GamePlay:
         slot = self.bord_play[self.game_bord_size - 1]
         for i in range(self.game_bord_size - 1, self.game_bord_size ** 2, self.game_bord_size -1):
 
-            if slot == self.bord_play[i]:
+            if slot == self.bord_play[i] and self.game_bord_size ** 2 != i + 1:
                 count += 1
 
         if count == self.game_bord_size:
             return True
 
         return False
+
+    def winning_check(self, name_player: str):
+        winn = None
+        if self.check_winning_row():
+            winn = True
+        elif self.check_winning_column():
+            winn = True
+        elif self.check_winning_diagonal():
+            winn = True
+        else:
+            winn = False
+
+        return winn, name_player
 
     def check_full_bord(self):
         count = 0
@@ -219,6 +232,22 @@ class GamePlay:
         if count == 2:
             return True
 
+        return False
+
+    def check_game_stuck(self):
+        stuck_row = False
+        stuck_column = False
+        stuck_diagonal = False
+
+        if self.stuck_row():
+            stuck_row = True
+        if self.stuck_column():
+            stuck_column = True
+        if self.stuck_diagonal():
+            stuck_diagonal = True
+
+        if stuck_row and stuck_column and stuck_diagonal:
+            return True
         return False
 
 

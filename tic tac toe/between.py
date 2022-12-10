@@ -13,36 +13,6 @@ def check_play_again():
     return False
 
 
-def check_game_stuck(game: GamePlay):
-    stuck_row = False
-    stuck_column = False
-    stuck_diagonal = False
-
-    if game.stuck_row():
-        stuck_row = True
-    if game.stuck_column():
-        stuck_column = True
-    if game.stuck_diagonal():
-        stuck_diagonal = True
-
-    if stuck_row and stuck_column and stuck_diagonal:
-        return True
-    return False
-
-
-def winning_check(name_player: str, game: GamePlay):
-    winn = None
-    if game.check_winning_row():
-        winn = True
-    elif game.check_winning_column():
-        winn = True
-    elif game.check_winning_diagonal():
-        winn = True
-    else:
-        winn = False
-
-    return winn, name_player
-
 def player_play(game: GamePlay, place_insert: int, status: int, player, size):
 
     cant_play = True
@@ -92,3 +62,50 @@ def check_input_player(player, size):
         print(f"Error! pleas enter num between 1 - {size*size} ")
         place_insert = input(f"{player} turn: ")
     return int(place_insert)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# def check_game_stuck(game: GamePlay):
+#     stuck_row = False
+#     stuck_column = False
+#     stuck_diagonal = False
+#
+#     if game.stuck_row():
+#         stuck_row = True
+#     if game.stuck_column():
+#         stuck_column = True
+#     if game.stuck_diagonal():
+#         stuck_diagonal = True
+#
+#     if stuck_row and stuck_column and stuck_diagonal:
+#         return True
+#     return False
+
+
+# def winning_check(name_player: str, game: GamePlay):
+#     winn = None
+#     if game.check_winning_row():
+#         winn = True
+#     elif game.check_winning_column():
+#         winn = True
+#     elif game.check_winning_diagonal():
+#         winn = True
+#     else:
+#         winn = False
+#
+#     return winn, name_player

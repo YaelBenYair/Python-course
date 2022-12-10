@@ -54,17 +54,17 @@ if __name__ == '__main__':
 
                 between.player_play(game, place_insert, player1_status, player1, bord_size)
 
-                winn_play, name = between.winning_check(player1, game)
+                winn_play, name = game.winning_check(player1)
 
                 player1_play_turn -= 1
-                player2_play_turn +=1
+                player2_play_turn += 1
 
             else:
                 place_insert = between.check_input_player(player2, bord_size)
 
                 between.player_play(game, place_insert, player2_status, player2, bord_size)
 
-                winn_play, name = between.winning_check(player2, game)
+                winn_play, name = game.winning_check(player2)
 
                 player2_play_turn -= 1
                 player1_play_turn += 1
@@ -79,7 +79,7 @@ if __name__ == '__main__':
             if bord_full:
                 not_winn = False
 
-            stuck = between.check_game_stuck(game)
+            stuck = game.check_game_stuck()
             if stuck:
                 not_winn = False
 
