@@ -1,0 +1,92 @@
+import random
+import datetime
+
+
+
+class BusRoute:
+
+    def __init__(self, line_number: int, origin: str, destination: str, stops: str):
+        self.__line_number = line_number
+        self._origin = origin
+        self._destination = destination
+        self._stops = stops
+        self._scheduled_rides: dict[int: ScheduledRide] = {}
+
+    def __str__(self):
+        return f"Line number: {self.__line_number}\n" \
+               f"Origin: {self._origin}\n" \
+               f"Destination: {self._destination}\n" \
+               f"Stops: {self._stops}\n" \
+               f"Scheduled rides: {self._scheduled_rides}"
+
+    def __repr__(self):
+        return self.__str__()
+
+    def get_origin(self):
+        return self._origin
+
+    def get_stops(self):
+        return self._stops
+
+    def get_destin(self):
+        return self._destination
+
+    def add_scheduled_rides(self, origin_time: datetime, destination_time: datetime, driver_name: str):
+        id_sche = random.randint(10000, 100000)
+        while id_sche in self._scheduled_rides:
+            id_sche = random.randint(10000, 100000)
+
+        self._scheduled_rides[id_sche] = ScheduledRide(id_sche, origin_time, destination_time, driver_name)
+
+    def display_sched(self):
+        print(self._scheduled_rides)
+
+    def change_origin(self, new_origin: str):
+        self._origin = new_origin
+
+    def change_destination(self, new_destination: str):
+        self._destination = new_destination
+
+    def change_stops(self, new_stops: list):
+        self._stops = new_stops
+
+
+class ScheduledRide:
+
+    def __init__(self, id_sche: int, origin_time: datetime, destination_time: datetime, driver_name: str):
+        self._driver_name = driver_name
+        self._destination_time = destination_time
+        self._origin_time = origin_time
+        self._id_sche = id_sche
+        self._delays: dict[datetime: int] = {}
+
+    def __str__(self):
+        return f"Id: {self._id_sche}\n" \
+               f"Origin time: {self._origin_time}\n" \
+               f"Destination time: {self._destination_time}\n" \
+               f"Delays: {self._delays}"
+
+    def __repr__(self):
+        return self.__str__()
+
+    def add_delays(self):
+        date_delays = datetime.date.today()
+        if date_delays not in self._delays:
+            self._delays[date_delays] = 0
+
+        self._delays[date_delays] += 1
+
+    def get_delays(self):
+        return self._delays
+
+
+
+
+
+
+
+
+
+
+
+
