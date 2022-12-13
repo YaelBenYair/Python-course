@@ -2,6 +2,7 @@ import csv
 import json
 import os.path
 from abc import ABC, abstractmethod
+import pandas as ps
 
 
 class TextFile(ABC):
@@ -17,7 +18,7 @@ class TextFile(ABC):
         self._file_path = file_path
 
     def get_file_size(self):
-        pass
+        return os.stat(self._file_path).st_size
 
     def get_content(self):
         with open(self._file_path, 'r') as fd:
@@ -25,6 +26,18 @@ class TextFile(ABC):
         return content
         # open a file (fd / fh) - common for all
         # get content - specific
+
+    def _base_name_file_path(self):
+        return os.path.basename(self._file_path)
+
+    def get_file_name(self):
+        return os.path.splitext(self._base_name_file_path())[0]
+
+    def get_file_extension(self):
+        return os.path.splitext(self._base_name_file_path())[-1]
+
+    def get_file_path(self):
+        return os.path.dirname(self._file_path)
 
     @abstractmethod
     def _get_specific_content(self, fd):
@@ -34,7 +47,12 @@ class TextFile(ABC):
     def _get_ext(self):
         pass
 
+    # def _open_file(self):
+    #     with open(self._file_path, 'r') as fd:
+    #         return fd
 
+
+# ------------------------- CsvFile --------------------------------------------------
 class CsvFile(TextFile):
 
     def __init__(self, file_path, delimiter=','):
@@ -50,6 +68,119 @@ class CsvFile(TextFile):
             ret_val.append(row)
         return ret_val
 
+    def _open_csv_file(self):
+        with open(self._file_path, "r", newline="") as csvfile:
+            # read_file = csv.reader(csvfile)
+            read_file = ps.read_csv(csvfile, delimiter=self._delimiter)
+        return read_file
+
+    def get_header(self) -> list:
+        return list(self._open_csv_file().columns)
+
+    def get_rows_num(self):
+        return len(self._open_csv_file()) + 1
+
+        # with open(self._file_path, "r", newline="") as csvfile:
+        #     read_file = csv.reader(csvfile)
+        # read_file = self._open_csv_file()
+
+    def get_columns_num(self):
+        return len(self._open_csv_file().axes[1])
+
+        # with open(self._file_path, "r", newline="") as csvfile:
+        #     read_file = csvfile.readline()
+        # return len(read_file.split(self._delimiter))
+
+    def get_row(self, row_num):
+        with open(self._file_path, "r", newline="") as csvfile:
+            read_file = csv.DictReader(csvfile, delimiter=self._delimiter)
+
+            counter = 0
+            for item in read_file:
+                counter += 1
+                if counter == row_num:
+                    return item
+        raise Exception()
+
+    def get_cell(self, row_num, column_num):
+        with open(self._file_path, 'r', newline="") as csvf:
+            read_f = csv.reader(csvf, delimiter=self._delimiter)
+            csv_list = list(read_f)
+
+            # if the row and column out of range
+            if len(csv_list) < row_num - 1 and len(csv_list[0]) < column_num:
+                return False
+
+            return csv_list[row_num][column_num - 1]
+
+    def _is_header(self, csv_line):
+        first_line = "".join(csv_line)
+        first_line = "".join(first_line.split(" "))
+        first_line = "".join(first_line.split(self._delimiter))
+        if first_line.isalpha():
+            return True
+        return False
+
+    def _get_column_name_by_num(self, r, column_n):
+        line = next(r)
+        if self._is_header(line):
+            header = line[0].split(self._delimiter)
+            return header[column_n - 1]
+        return column_n
+
+    def get_column(self, column_num: int):
+        clu_info = []
+        with open(self._file_path, "r", newline="") as csvfile:
+            re = csv.reader(csvfile)
+            # check if there is a header. if true return name of column else return the column_num
+            clu_name = self._get_column_name_by_num(re, column_num)
+            clu_info.append(clu_name)
+            csvfile.seek(0)
+
+            # if csv file haven't header
+            if clu_name == column_num:
+                csv_obj = csv.reader(csvfile)
+                for item in csv_obj:
+                    clu_info.append(item[0].split(self._delimiter)[column_num - 1])
+                return clu_info
+
+            csv_obj = csv.DictReader(csvfile, delimiter=self._delimiter)
+            for item in csv_obj:
+                clu_info.append(item[clu_name])
+            return clu_info
+
+    def __add__(self, other):
+        index_list = []
+        if not isinstance(other, CsvFile):
+            raise Exception()
+
+        header1, header2 = self.get_header(), other.get_header()
+
+        if not self._is_header(header1) and not other._is_header(header2):
+            raise Exception()
+
+        file_path_name = self.get_file_path() + "\\" + self.get_file_name() + "_" + other.get_file_name() + \
+                        self.get_file_extension()
+
+        if os.path.exists(file_path_name):
+            raise Exception()
+
+        # print(other.get_content())
+        # print(self.get_content())
+
+        with open(file_path_name, "w", newline="") as csv_f:
+            writer = csv.DictWriter(csv_f, fieldnames=header1)
+            writer.writeheader()
+
+            for row in self.get_content():
+                writer.writerow(row)
+            for row in other.get_content():
+                writer.writerow(row)
+
+        return True
+
+
+# ------------------------- TxtFile --------------------------------------------------
 class TxtFile(TextFile):
 
     def _get_specific_content(self, fd):
@@ -58,6 +189,40 @@ class TxtFile(TextFile):
     def _get_ext(self):
         return 'txt'
 
+    def _txt_file_read(self):
+        with open(self._file_path, 'r') as fd:
+            return fd.read()
+        # return file_read.split()
+
+    def get_words_num(self):
+        return len(self._txt_file_read().split())
+
+    def get_avg_word_len(self):
+        sum_words_len = 0
+        for word in self._txt_file_read().split():
+            sum_words_len += len(word)
+        return int(sum_words_len / self.get_words_num())
+
+    def __add__(self, other):
+        if not isinstance(other, TxtFile):
+            Two_files_with_different_type = f"The {other} must be TxtFile type"
+            raise Exception(Two_files_with_different_type)
+
+        file_path_name = self.get_file_path() + "\\" +self.get_file_name() + "_" + other.get_file_name() + \
+                         self.get_file_extension()
+
+        if os.path.exists(file_path_name):
+            file_name_exists = f"The file {self.get_file_name()}_{other.get_file_name()}{self.get_file_extension()} " \
+                               f"already exists"
+            raise Exception(file_name_exists)
+
+        with open(file_path_name, 'w') as fh:
+            fh.write(self.get_content() + other.get_content())
+
+        return True
+
+
+# ------------------------- JsonFile --------------------------------------------------
 class JsonFile(TextFile):
 
     def _get_specific_content(self, fd):
@@ -66,11 +231,19 @@ class JsonFile(TextFile):
     def _get_ext(self):
         return 'json'
 
-csv_file = CsvFile("/Users/valeria/src/morning-ninjas/lesson9/files/data/files_ex/username-or-email.csv", ';')
-txt = TxtFile("/Users/valeria/src/morning-ninjas/lesson9/files/data/alice_in_wonderland.txt")
-json_file = JsonFile("/Users/valeria/src/morning-ninjas/lesson9/files/data/my_persons.json")
-files_list = [csv_file, txt, json_file]
-for f in files_list:
-    print(f.get_content())
+    def _json_file_load(self):
+        with open(self._file_path, 'r') as fd:
+            json_file_name = json.load(fd)
+        return json_file_name
 
-# csv_file = CsvFile("/Users/valeria/src/morning-ninjas/lesson9/files/data/AAPL.csv")
+    def is_list(self):
+        if type(self._json_file_load()) is list:
+            return True
+        return False
+
+    def is_object(self):
+        if type(self._json_file_load()) is dict:
+            return True
+        return False
+
+

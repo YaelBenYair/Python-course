@@ -1,0 +1,1 @@
+To write to an existing file, you must add a parameter to the open() function

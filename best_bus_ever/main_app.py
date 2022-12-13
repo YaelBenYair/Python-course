@@ -21,7 +21,6 @@ if __name__ == '__main__':
     # if manager or passenger
     # manager:
     # while < 3 - password = RideWithUs!
-    # Manager(bus_company)
     # exit = False
     # while not exit
     # input(menu)
@@ -39,7 +38,6 @@ if __name__ == '__main__':
     # loop until exit
 
     # passenger:
-    # Passenger(bus_company)
     # exit = False
     # while not exit
     # input(menu)
