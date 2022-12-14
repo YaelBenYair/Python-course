@@ -112,6 +112,18 @@ class CsvFile(TextFile):
                 return False
 
             return csv_list[row_num][column_num - 1]
+    @staticmethod
+    def _is_equal(h1: list, h2: list):
+        count = 0
+        for cul in h1:
+            for cul2 in h2:
+                if cul == cul2:
+                    count += 1
+
+        if len(h1) == count:
+            return True
+        return False
+
 
     def _is_header(self, csv_line):
         first_line = "".join(csv_line)
@@ -157,6 +169,9 @@ class CsvFile(TextFile):
         header1, header2 = self.get_header(), other.get_header()
 
         if not self._is_header(header1) and not other._is_header(header2):
+            raise Exception()
+
+        if not self._is_equal(header1, header2):
             raise Exception()
 
         file_path_name = self.get_file_path() + "\\" + self.get_file_name() + "_" + other.get_file_name() + \
