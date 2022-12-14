@@ -4,6 +4,8 @@ import os.path
 from abc import ABC, abstractmethod
 import pandas as ps
 
+from C10.text_file_exception import FileNameExistsEror
+
 
 class TextFile(ABC):
 
@@ -46,6 +48,11 @@ class TextFile(ABC):
     @abstractmethod
     def _get_ext(self):
         pass
+
+    # def check_type(self, var):
+    #     name_class = __class__.__name__
+    #     if not isinstance(var, __class__.__name__):
+    #         raise ValueError("2 values must be TxtFile type")
 
     # def _open_file(self):
     #     with open(self._file_path, 'r') as fd:
@@ -162,9 +169,10 @@ class CsvFile(TextFile):
             return clu_info
 
     def __add__(self, other):
-        index_list = []
+
         if not isinstance(other, CsvFile):
             raise Exception()
+        # self.check_type(other)
 
         header1, header2 = self.get_header(), other.get_header()
 
@@ -220,16 +228,14 @@ class TxtFile(TextFile):
 
     def __add__(self, other):
         if not isinstance(other, TxtFile):
-            Two_files_with_different_type = f"The {other} must be TxtFile type"
-            raise Exception(Two_files_with_different_type)
+            raise ValueError("2 values must be TxtFile type")
 
         file_path_name = self.get_file_path() + "\\" +self.get_file_name() + "_" + other.get_file_name() + \
                          self.get_file_extension()
 
         if os.path.exists(file_path_name):
-            file_name_exists = f"The file {self.get_file_name()}_{other.get_file_name()}{self.get_file_extension()} " \
-                               f"already exists"
-            raise Exception(file_name_exists)
+            file_name_exists = f"{self.get_file_name()}_{other.get_file_name()}{self.get_file_extension()}"
+            raise FileNameExistsEror(file_name_exists)
 
         with open(file_path_name, 'w') as fh:
             fh.write(self.get_content() + other.get_content())

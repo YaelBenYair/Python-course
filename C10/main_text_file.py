@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     print("txt words num: ", txt.get_words_num())
     print("txt words avg: ", txt.get_avg_word_len())
-    print(" + : ", txt2 + txt3)
+    # print(" + : ", txt2 + txt3)
     # print(" + : ", txt2 + json_file2)
     print()
 

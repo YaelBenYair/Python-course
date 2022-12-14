@@ -2,10 +2,11 @@ import random
 import datetime
 
 
-
 class BusRoute:
 
-    def __init__(self, line_number: int, origin: str, destination: str, stops: str):
+    sched_counter = 1
+
+    def __init__(self, line_number: int, origin: str, destination: str, stops: list):
         self.__line_number = line_number
         self._origin = origin
         self._destination = destination
@@ -13,14 +14,17 @@ class BusRoute:
         self._scheduled_rides: dict[int: ScheduledRide] = {}
 
     def __str__(self):
-        return f"Line number: {self.__line_number}\n" \
+        return f"\nLine number: {self.__line_number}\n" \
                f"Origin: {self._origin}\n" \
                f"Destination: {self._destination}\n" \
                f"Stops: {self._stops}\n" \
-               f"Scheduled rides: {self._scheduled_rides}"
+               f"Scheduled rides: \n{self._scheduled_rides}\n"
 
     def __repr__(self):
         return self.__str__()
+
+    def get_line_number(self):
+        return self.__line_number
 
     def get_origin(self):
         return self._origin
@@ -32,11 +36,19 @@ class BusRoute:
         return self._destination
 
     def add_scheduled_rides(self, origin_time: datetime, destination_time: datetime, driver_name: str):
-        id_sche = random.randint(10000, 100000)
-        while id_sche in self._scheduled_rides:
-            id_sche = random.randint(10000, 100000)
+        # id_sche = random.randint(10000, 100000)
+        # while id_sche in self._scheduled_rides:
+        #     id_sche = random.randint(10000, 100000)
 
-        self._scheduled_rides[id_sche] = ScheduledRide(id_sche, origin_time, destination_time, driver_name)
+        self._scheduled_rides[BusRoute.sched_counter] = ScheduledRide(BusRoute.sched_counter, origin_time,
+                                                                      destination_time, driver_name)
+        BusRoute.sched_counter += 1
+
+    def add_delay(self, id_s: int):
+        if id_s not in self._scheduled_rides:
+            raise Exception()
+        self._scheduled_rides[id_s].add_delays()
+
 
     def display_sched(self):
         print(self._scheduled_rides)
@@ -61,7 +73,7 @@ class ScheduledRide:
         self._delays: dict[datetime: int] = {}
 
     def __str__(self):
-        return f"Id: {self._id_sche}\n" \
+        return f"\nId: {self._id_sche}\n" \
                f"Origin time: {self._origin_time}\n" \
                f"Destination time: {self._destination_time}\n" \
                f"Delays: {self._delays}"
@@ -76,8 +88,8 @@ class ScheduledRide:
 
         self._delays[date_delays] += 1
 
-    def get_delays(self):
-        return self._delays
+    # def get_delays(self):
+    #     return self._delays
 
 
 
