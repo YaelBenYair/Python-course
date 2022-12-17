@@ -27,3 +27,8 @@ class BusDetaileExistsError(BestBusCompanyExceptions):
     def __init__(self, val):
         super().__init__(f"{val} already exists")
 
+
+class MarkError(BestBusCompanyExceptions):
+    def __init__(self, val):
+        super().__init__(f"The mark {val} does not exist")
+

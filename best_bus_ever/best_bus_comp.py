@@ -17,11 +17,16 @@ class BestBusCompany:
         if val not in s_dict:
             raise BusDetaileNotExistsError(val)
 
-    def add_to_bus_stop_dict(self, stops: list, bus_r: BusRoute):
+    def _add_to_bus_stop_dict(self, stops: list, bus_r: BusRoute):
         for stop in stops:
             if stop not in self._bus_stop2busroute:
                 self._bus_stop2busroute[stop] = []
             self._bus_stop2busroute[stop].append(bus_r)
+
+    def _add_to_origin_destin_dict(self, origin: str, bus_r: BusRoute, self_dict):
+        if origin not in self_dict:
+            self_dict[origin] = []
+        self_dict[origin].append(bus_r)
 
     def add_route(self, line_num: int, origin: str, destination: str, stops: str):
         # check if the line number already exist
@@ -31,16 +36,18 @@ class BestBusCompany:
         bus_route = BusRoute(line_num, origin, destination, stops.split(","))
         self._line_num2busroute[line_num] = bus_route
 
-        self.add_to_bus_stop_dict(stops.split(","), bus_route)
+        self._add_to_bus_stop_dict(stops.split(","), bus_route)
 
         # can be more than one line with the same origin and the same destination
-        if origin not in self._origin2busroute:
-            self._origin2busroute[origin] = []
-        self._origin2busroute[origin].append(bus_route)
+        self._add_to_origin_destin_dict(origin, bus_route, self._origin2busroute)
+        # if origin not in self._origin2busroute:
+        #     self._origin2busroute[origin] = []
+        # self._origin2busroute[origin].append(bus_route)
 
-        if destination not in self._destination2busroute:
-            self._destination2busroute[destination] = []
-        self._destination2busroute[destination].append(bus_route)
+        self._add_to_origin_destin_dict(destination, bus_route, self._destination2busroute)
+        # if destination not in self._destination2busroute:
+        #     self._destination2busroute[destination] = []
+        # self._destination2busroute[destination].append(bus_route)
 
         return True
 
@@ -93,13 +100,23 @@ class BestBusCompany:
         print(self._line_num2busroute[line_num])
 
     def update_origin(self, line_num: int, new_origin: str):
+        self._delete_from_origin(line_num)
         self._line_num2busroute[line_num].change_origin(new_origin)
+        bus_r = self._line_num2busroute[line_num]
+        self._add_to_origin_destin_dict(new_origin, bus_r, self._origin2busroute)
+
 
     def update_destin(self, line_num: int, new_destin: str):
+        self._delete_from_destin(line_num)
         self._line_num2busroute[line_num].change_destination(new_destin)
+        bus_r = self._line_num2busroute[line_num]
+        self._add_to_origin_destin_dict(new_destin, bus_r, self._destination2busroute)
 
-    def updete_stops(self, line_num: int, new_stops: str):
+    def update_stops(self, line_num: int, new_stops: str):
+        self._delete_from_stops(line_num)
         self._line_num2busroute[line_num].change_stops(new_stops.split(","))
+        bus_r = self._line_num2busroute[line_num]
+        self._add_to_bus_stop_dict(new_stops.split(","), bus_r)
 
     # add scheduled ----------------------------------------------------------------------------------------------------
     def get_scheduled_line(self, line_num: int):
@@ -117,23 +134,27 @@ class BestBusCompany:
     def search_by_line(self, line_num: int):
         # self._line_num_exists(line_num)
         self._check_exists(line_num, self._line_num2busroute)
-        return self._line_num2busroute[line_num]
+        print(self._line_num2busroute[line_num])
+        # return self._line_num2busroute[line_num]
 
     def search_by_origin(self, origin: str):
         self._check_exists(origin, self._origin2busroute)
+        print(self._origin2busroute[origin])
         # if origin not in self._origin2busroute:
         #     raise Exception()
-        return self._origin2busroute[origin]
+        # return self._origin2busroute[origin]
 
     def search_by_destin(self, destin: str):
         self._check_exists(destin, self._destination2busroute)
+        print(self._destination2busroute[destin])
         # if destin not in self._destination2busroute:
         #     raise Exception()
-        return self._destination2busroute[destin]
+        # return self._destination2busroute[destin]
 
     def search_by_bus_stop(self, stop: str):
         self._check_exists(stop, self._bus_stop2busroute)
-        return self._bus_stop2busroute[stop]
+        print(self._bus_stop2busroute[stop])
+        # return self._bus_stop2busroute[stop]
 
     def report_delay(self, line_num: int, sche_id: int):
         self._line_num2busroute[line_num].add_delay(sche_id)

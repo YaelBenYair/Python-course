@@ -2,72 +2,22 @@ import os
 import pickle
 from best_bus_ever.best_bus_comp import BestBusCompany
 from BestBusCompanyExceptions import *
+from passenger_menu_func import *
+from manager_menu_func import *
 
 
-# def manager_passenger(msg: str, maxi: int) -> int:
-#     while True:
-#         selection = int(input("Enter 1 - for manager, 2 - for passenger: "))
-#         if selection < 1 or selection > 2:
-#             raise OutOfRangeError(selection)
-#         return selection
-#
-# def menu_selection() -> int:
-#     while True:
-#         selection = int(input("Enter your selection 1-5: "))
-#         if selection < 1 or selection > 5:
-#             raise OutOfRangeError(selection)
-#         return selection
-
-def selection(msg: str, maxi: int) -> int:
+def main_menu(func: Callable, msg: str, num_range: int):
     while True:
-        selection = int(input(msg))
-        if selection < 1 or selection > maxi:
-            raise OutOfRangeError(selection)
-        return selection
+        try:
+            func()
+            menu_selection: int = selection(msg, num_range)
+            break
+        except ValueError:
+            print("\nThe input must be a number\n")
+        except BestBusCompanyExceptions as e:
+            print(e)
 
-
-def password_check() -> bool:
-    pas = None
-    count = 1
-    equal = False
-    # check password
-    while not equal and count <= 3:
-        pas = input("Please enter a password: ").strip()
-        count += 1
-        if pas == password:
-            equal = True
-        elif not equal and count < 3:
-            print("\nIncorrect password! please try again\n")
-    return equal
-
-
-def display_menu():
-    print("\nHello Manager!\nWhat actions would you like to take?\n"
-          "1 - Add route\n"
-          "2 - Delete route\n"
-          "3 - Update route\n"
-          "4 - Add scheduled ride\n"
-          "5 - Exit\n")
-
-
-def insert_origin_destin(msg) -> str:
-    while True:
-        stop_in = input(msg).strip()
-        stop = "".join(stop_in.split(" "))
-        if stop.isalpha():
-            return stop_in
-        raise StringEror()
-
-
-def insert_stops():
-    stops = input("Please enter line stops in format - A,B,C,D: ")
-    for char in stops:
-        if char.isalpha() or char in (" ", ",", "-"):
-            continue
-        else:
-            raise FormatError()
-    return stops
-
+    return menu_selection
 
 # ----------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
@@ -89,7 +39,7 @@ if __name__ == '__main__':
     # check input manager or passenger
     while True:
         try:
-            selection_user = selection("Enter 1 - for manager, 2 - for passenger: ", 2)
+            selection_user = selection("[1] - Manager\n[2] - Passenger\nEnter 1,2: ", 2)
             break
         except ValueError:
             print("\nThe input must be a number\n")
@@ -106,87 +56,47 @@ if __name__ == '__main__':
             # print("bye bye")
 
         while not exit_func:
-            while True:
-                try:
-                    display_menu()
-                    menu: int = selection("Enter your selection 1-5: ", 5)
-                    break
-                except ValueError:
-                    print("\nThe input must be a number\n")
-                except BestBusCompanyExceptions as e:
-                    print(e)
 
-            match menu:
+            menu_select = main_menu(display_menu, "Enter your selection 1-6: ", 6)
+
+            match menu_select:
                 case 1:
-                    # case 1 - add route
-                    while True:
-                        try:
-                            lin_num = int(input("Please enter line number: "))
-                            origin = insert_origin_destin("Please enter origin: ")
-                            destin = insert_origin_destin("Please enter destination: ")
-
-                            while True:
-                                try:
-                                    bus_stops = insert_stops()
-                                    break
-                                except ValueError:
-                                    print("\nThe input must be a string\n")
-                                except BestBusCompanyExceptions as e:
-                                    print(e)
-                            # Creates a bus variable only if all inputs are true
-                            bus_company.add_route(lin_num, origin, destin, bus_stops)
-                            break
-                        except ValueError:
-                            print("\nThe input must be a number\n")
-                        except BestBusCompanyExceptions as e:
-                            print(e)
+                    add_route(bus_company)
 
                 case 2:
-                    print('delete_route()')
+                    delete_route(bus_company)
+
                 case 3:
-                    print('update_route()')
+                    update_route(bus_company)
+
                 case 4:
-                    print('add_scheduled_ride()')
+                    add_scheduled_ride(bus_company)
+
                 case 5:
+                    print(bus_company.get_lins_by_num())
+
+                case 6:
                     exit_func = True
-    print(bus_company.get_lins_by_num())
 
+    elif selection_user == 2:
+        exit_func = False
 
+        while not exit_func:
+            menu_select = main_menu(display_menu_passenger, "Enter your selection 1-3: ", 3)
 
-    # if manager or passenger
-    # manager:
-    # while < 3 - password = RideWithUs!
-    # exit = False
-    # while not exit
-    # input(menu)
-    # match menu:
-    # case 1:
-    #     add_route()
-    # case 2:
-    #     delete_route()
-    # case 3:
-    #     update_route()
-    # case  4:
-    #     add_scheduled_ride()
-    # case 5:
-    #     exit = True
-    # loop until exit
+            match menu_select:
+                case 1:
+                    search_route(bus_company)
 
-    # passenger:
-    # exit = False
-    # while not exit
-    # input(menu)
-    # match menu:
-    # case 1:
-    #     search_route
-    # case 2:
-    #     report_delay
-    # case 3:
-    #     exit = True
-    # loop until exit
+                case 2:
+                    report_delay(bus_company)
 
-        # before exiting the program, persist the current state
-        # of te system in the file, so next time it will be loaded
+                case 3:
+                    exit_func = True
+    print("Bye bye")
+
+    # before exiting the program, persist the current state
+    # of te system in the file, so next time it will be loaded
     with open('db\\bus_company.pickle', 'wb') as fh:
         pickle.dump(bus_company, fh)
 
