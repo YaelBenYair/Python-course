@@ -101,9 +101,6 @@ if __name__ == '__main__':
         pickle.dump(bus_company, fh)
 
 
-# print(bus_c.add_route(16, 'Tayasim', 'Opera', 'school,park,sea,xxx'))
-
-
 
 
 

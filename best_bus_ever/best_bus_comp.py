@@ -40,21 +40,14 @@ class BestBusCompany:
 
         # can be more than one line with the same origin and the same destination
         self._add_to_origin_destin_dict(origin, bus_route, self._origin2busroute)
-        # if origin not in self._origin2busroute:
-        #     self._origin2busroute[origin] = []
-        # self._origin2busroute[origin].append(bus_route)
 
         self._add_to_origin_destin_dict(destination, bus_route, self._destination2busroute)
-        # if destination not in self._destination2busroute:
-        #     self._destination2busroute[destination] = []
-        # self._destination2busroute[destination].append(bus_route)
+
 
         return True
 
     # delete route -----------------------------------------------------------------------------------------------------
-    # def _line_num_exists(self,line_n: int):
-    #     if line_n not in self._line_num2busroute:
-    #         raise Exception()
+
     def _delete_from_origin(self, line_num: int):
         inx_i = None
         origin = self._line_num2busroute[line_num].get_origin()
@@ -83,7 +76,6 @@ class BestBusCompany:
                 self._bus_stop2busroute[key].pop(inx_i)
 
     def delete_route(self, line_num: int):
-        # self._line_num_exists(line_num)
         self._check_exists(line_num, self._line_num2busroute)
 
         self._delete_from_origin(line_num)
@@ -95,7 +87,6 @@ class BestBusCompany:
 
     # update line ------------------------------------------------------------------------------------------------------
     def display_information_route_by_line(self, line_num: int):
-        # self._line_num_exists(line_num)
         self._check_exists(line_num, self._line_num2busroute)
         print(self._line_num2busroute[line_num])
 
@@ -120,41 +111,34 @@ class BestBusCompany:
 
     # add scheduled ----------------------------------------------------------------------------------------------------
     def get_scheduled_line(self, line_num: int):
-        # self._line_num_exists(line_num)
         self._check_exists(line_num, self._line_num2busroute)
         return self._line_num2busroute[line_num].display_sched()
 
     def add_scheduled(self, line_num: int, origin_time: datetime, destination_time: datetime, driver_name: str):
-        # self._line_num_exists(line_num)
         self._check_exists(line_num, self._line_num2busroute)
         self._line_num2busroute[line_num].add_scheduled_rides(origin_time, destination_time, driver_name)
 
     # Passenger actions --------------
     # search route -----------------------------------------------------------------------------------------------------
     def search_by_line(self, line_num: int):
-        # self._line_num_exists(line_num)
         self._check_exists(line_num, self._line_num2busroute)
         print(self._line_num2busroute[line_num])
-        # return self._line_num2busroute[line_num]
+
 
     def search_by_origin(self, origin: str):
         self._check_exists(origin, self._origin2busroute)
         print(self._origin2busroute[origin])
-        # if origin not in self._origin2busroute:
-        #     raise Exception()
-        # return self._origin2busroute[origin]
+
 
     def search_by_destin(self, destin: str):
         self._check_exists(destin, self._destination2busroute)
         print(self._destination2busroute[destin])
-        # if destin not in self._destination2busroute:
-        #     raise Exception()
-        # return self._destination2busroute[destin]
+
 
     def search_by_bus_stop(self, stop: str):
         self._check_exists(stop, self._bus_stop2busroute)
         print(self._bus_stop2busroute[stop])
-        # return self._bus_stop2busroute[stop]
+
 
     def report_delay(self, line_num: int, sche_id: int):
         self._line_num2busroute[line_num].add_delay(sche_id)
@@ -163,40 +147,36 @@ class BestBusCompany:
 
     def get_lins_by_num(self):
         return self._line_num2busroute
-    # def by_origin(self):
-    #     return self._origin2busroute
-    # def by_stops(self):
-    #     return self._bus_stop2busroute
 
 
 
 
 
-
-
-if __name__ == '__main__':
-
-    bus_c = BestBusCompany()
-    print(bus_c.add_route(16, 'Tayasim', 'Opera', 'school,park,sea,xxx'))
-    print(bus_c.add_route(32, 'bbb', 'abc', 'xxx,lll,ggg'))
-    # print(bus_c.get_lins_by_num())
-    bus_c.add_scheduled(16, datetime.time(12, 40), datetime.time(13, 40), "Tom")
-    # print(bus_c.search_by_line(16))
-    print(bus_c.search_by_origin('Tayasim'))
-    print()
-    bus_c.report_delay(16, 1)
-    print(bus_c.search_by_line(16))
-    bus_c.report_delay(16, 1)
-    bus_c.report_delay(16, 1)
-    print()
-    print(bus_c.search_by_line(16))
-    # print(bus_c.by_stops())
-    # print(bus_c.by_origin())
-    # bus_c.delete_route(32)
-    print()
-    # print(bus_c.get_lins_by_num())
-    # print(bus_c.by_stops())
-    # print(bus_c.by_origin())
+#
+#
+# if __name__ == '__main__':
+#
+#     bus_c = BestBusCompany()
+#     print(bus_c.add_route(16, 'Tayasim', 'Opera', 'school,park,sea,xxx'))
+#     print(bus_c.add_route(32, 'bbb', 'abc', 'xxx,lll,ggg'))
+#     # print(bus_c.get_lins_by_num())
+#     bus_c.add_scheduled(16, datetime.time(12, 40), datetime.time(13, 40), "Tom")
+#     # print(bus_c.search_by_line(16))
+#     print(bus_c.search_by_origin('Tayasim'))
+#     print()
+#     bus_c.report_delay(16, 1)
+#     print(bus_c.search_by_line(16))
+#     bus_c.report_delay(16, 1)
+#     bus_c.report_delay(16, 1)
+#     print()
+#     print(bus_c.search_by_line(16))
+#     # print(bus_c.by_stops())
+#     # print(bus_c.by_origin())
+#     # bus_c.delete_route(32)
+#     print()
+#     # print(bus_c.get_lins_by_num())
+#     # print(bus_c.by_stops())
+#     # print(bus_c.by_origin())
 
 
 

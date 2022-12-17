@@ -39,7 +39,7 @@ class BusRoute:
         # id_sche = random.randint(10000, 100000)
         # while id_sche in self._scheduled_rides:
         #     id_sche = random.randint(10000, 100000)
-            #  1 : 1, 12:45, 14:00, Tom
+
         self._scheduled_rides[BusRoute.sched_counter] = ScheduledRide(BusRoute.sched_counter, origin_time,
                                                                       destination_time, driver_name)
 
