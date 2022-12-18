@@ -1,6 +1,6 @@
 import os
 import pickle
-from best_bus_ever.best_bus_comp import BestBusCompany
+from best_bus_comp import BestBusCompany
 from BestBusCompanyExceptions import *
 from passenger_menu_func import *
 from manager_menu_func import *

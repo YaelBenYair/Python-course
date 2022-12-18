@@ -1,4 +1,4 @@
-from best_bus_ever.BestBusCompanyExceptions import OutOfRangeError, StringEror
+from BestBusCompanyExceptions import OutOfRangeError, StringEror
 
 
 def selection(msg: str, maxi: int) -> int:
