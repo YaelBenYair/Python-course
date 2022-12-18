@@ -141,6 +141,7 @@ class BestBusCompany:
 
 
     def report_delay(self, line_num: int, sche_id: int):
+        self._check_exists(line_num, self._line_num2busroute)
         self._line_num2busroute[line_num].add_delay(sche_id)
 
 
