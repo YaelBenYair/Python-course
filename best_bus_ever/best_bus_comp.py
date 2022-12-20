@@ -122,29 +122,23 @@ class BestBusCompany:
     # search route -----------------------------------------------------------------------------------------------------
     def search_by_line(self, line_num: int):
         self._check_exists(line_num, self._line_num2busroute)
-        print(self._line_num2busroute[line_num])
-
+        return self._line_num2busroute[line_num]
 
     def search_by_origin(self, origin: str):
         self._check_exists(origin, self._origin2busroute)
-        print(self._origin2busroute[origin])
-
+        return self._origin2busroute[origin]
 
     def search_by_destin(self, destin: str):
         self._check_exists(destin, self._destination2busroute)
-        print(self._destination2busroute[destin])
-
+        return self._destination2busroute[destin]
 
     def search_by_bus_stop(self, stop: str):
         self._check_exists(stop, self._bus_stop2busroute)
-        print(self._bus_stop2busroute[stop])
-
+        return self._bus_stop2busroute[stop]
 
     def report_delay(self, line_num: int, sche_id: int):
         self._check_exists(line_num, self._line_num2busroute)
         self._line_num2busroute[line_num].add_delay(sche_id)
-
-
 
     def get_lins_by_num(self):
         return self._line_num2busroute

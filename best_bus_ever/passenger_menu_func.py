@@ -24,7 +24,7 @@ def search_line_number(bus_company):
     while True:
         try:
             lin_num = int(input("Please enter the line number: "))
-            bus_company.search_by_line(lin_num)
+            print(bus_company.search_by_line(lin_num))
             break
         except ValueError:
             print("\nThe input must be a number\n")
@@ -36,7 +36,7 @@ def search_origin_destin(msg, func: callable):
     while True:
         try:
             origin_sear = insert_origin_destin(msg).capitalize()
-            func(origin_sear)
+            print(func(origin_sear))
             break
         except ValueError:
             print("\nThe input must be a string\n")
@@ -48,17 +48,17 @@ def search_stop(bus_company):
     while True:
         try:
             stop_sear = insert_origin_destin("Please insert stop you want to search: ").strip().capitalize()
-            bus_company.search_by_bus_stop(stop_sear)
+            print(bus_company.search_by_bus_stop(stop_sear))
             break
         except ValueError:
             print("\nThe input must be a string\n")
         except BestBusCompanyExceptions as e:
             try:
-                bus_company.search_by_destin(stop_sear)
+                print(bus_company.search_by_destin(stop_sear))
                 break
             except BestBusCompanyExceptions as e:
                 try:
-                    bus_company.search_by_origin(stop_sear)
+                    print(bus_company.search_by_origin(stop_sear))
                     break
                 except BestBusCompanyExceptions as e:
                     print(e)
