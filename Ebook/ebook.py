@@ -34,8 +34,6 @@ class EBook:
         self.pages_inx += 1
         return page
 
-        pass
-
     def get_total_page(self):
         return len(self.pages)
 
