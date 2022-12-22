@@ -22,6 +22,20 @@ class EBook:
 
         self.bookmark: dict[str: int] = {}
 
+    def __iter__(self):
+        self.pages_inx = 0
+        return self
+
+
+    def __next__(self):
+        if self.pages_inx == len(self.pages):
+            raise StopIteration()
+        page = self.pages[list(self.pages.keys())[self.pages_inx]]
+        self.pages_inx += 1
+        return page
+
+        pass
+
     def get_total_page(self):
         return len(self.pages)
 
@@ -80,21 +94,24 @@ if __name__ == '__main__':
     alice = EBook('text\\alice_in_wonderland.txt', 500)
 
     print(alice.get_total_page())
-    print(alice.get_page_contant(4))
-    alice.add_bookmark_by_name('little', 4)
-    alice.add_bookmark_by_name('wonder', 4)
-    alice.add_bookmark_by_name('start', 1)
-    alice.add_bookmark_by_name('mark', 10)
-    alice.add_bookmark_by_name('alice', 1)
+    # print(alice.get_page_contant(4))
+    # alice.add_bookmark_by_name('little', 4)
+    # alice.add_bookmark_by_name('wonder', 4)
+    # alice.add_bookmark_by_name('start', 1)
+    # alice.add_bookmark_by_name('mark', 10)
+    # alice.add_bookmark_by_name('alice', 1)
+    #
+    # alice.display_all_bookmarks()
+    # alice.display_bookmarked_page_by_name('little')
+    # alice.delete_bookmark_by_name('start')
+    # alice.display_all_bookmarks()
+    #
+    # alice.delete_all_page_bookmark(4)
+    # alice.display_all_bookmarks()
+    print(alice.pages.keys())
 
-    alice.display_all_bookmarks()
-    alice.display_bookmarked_page_by_name('little')
-    alice.delete_bookmark_by_name('start')
-    alice.display_all_bookmarks()
-
-    alice.delete_all_page_bookmark(4)
-    alice.display_all_bookmarks()
-
+    for page in alice:
+        print(page, "\n\n")
 
     # alice.add_bookmark_by_name('little', 4)
     # alice.add_bookmark_by_name('wonder', 4)
