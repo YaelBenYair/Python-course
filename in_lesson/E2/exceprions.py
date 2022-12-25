@@ -18,5 +18,5 @@ class NumberSelectionError(CocktailsAndGamesExeption):
 
 
 class StringError(CocktailsAndGamesExeption):
-    def __init__(self, strs):
-        super().__init__(f"{strs} must be string")
+    def __init__(self, strs, string_int: str):
+        super().__init__(f"{strs} must be {string_int}")

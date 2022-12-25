@@ -36,8 +36,9 @@ class CocktailsAndGames:
 	def _get_cockt_ingredient(js):
 		ingredient = []
 		count = 1
-		while js["drinks"][0][f"strMeasure{count}"] is not None:
-			ingredient.append(js["drinks"][0][f"strMeasure{count}"] + js["drinks"][0][f"strIngredient{count}"])
+		while js["drinks"][0][f"strMeasure{count}"] is not None and \
+				js["drinks"][0][f"strMeasure{count}"] != "":
+			ingredient.append(js["drinks"][0][f"strMeasure{count}"] + " " + js["drinks"][0][f"strIngredient{count}"])
 			count += 1
 		return ingredient
 

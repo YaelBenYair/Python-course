@@ -30,7 +30,7 @@ class Menu:
     def search_loop(self, msg :str, pattern: str, func_search: callable):
         while True:
             try:
-                general_var = insert_string_int(msg, pattern)
+                general_var = insert_string_int(msg, pattern, "string")
                 self._display_dict(func_search(general_var))
                 break
             except CocktailsAndGamesExeption as e:
@@ -40,7 +40,7 @@ class Menu:
         while True:
             try:
                 id_cockt = int(insert_string_int("To get information about the cocktail you want, "
-                                                 "enter an id cocktail: ", "[0-9]+$"))
+                                                 "enter an id cocktail: ", "[0-9]+$", "number"))
                 # result = self.search_ingredient(ingred, self.cockt_and_game.get_cock_by_ingredient)
                 self._display_list(self.cockt_and_game.get_cocktail_by_id(id_cockt))
                 break
