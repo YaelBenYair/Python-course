@@ -29,7 +29,7 @@ class CocktailsAndGames:
 		url_bored = "https://www.boredapi.com/api/activity"
 		result_bored = requests.get(url_bored).json()
 		return ["activity: " + result_bored["activity"],
-				"participants: " + result_bored["participants"],
+				"participants: " + str(result_bored["participants"]),
 				"link: " + result_bored["link"]]
 
 	@staticmethod
