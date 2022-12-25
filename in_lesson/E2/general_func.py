@@ -1,5 +1,5 @@
 import re
-from exeprions import *
+from exceprions import *
 
 def input_selection(range: str):
     num = input("Your selection: ")

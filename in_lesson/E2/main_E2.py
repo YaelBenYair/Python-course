@@ -1,6 +1,6 @@
 import os
 import pickle
-from E2 import CocktailsAndGames
+from CocktailsAndGames import CocktailsAndGames
 from menu import Menu
 
 

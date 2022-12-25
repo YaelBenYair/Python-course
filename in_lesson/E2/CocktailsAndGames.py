@@ -1,21 +1,7 @@
 from pprint import pprint
 import requests
 import datetime
-from exeprions import *
-
-
-# url = "https://edamam-recipe-search.p.rapidapi.com/search"
-#
-# querystring = {"q":"pasta"}
-#
-# headers = {
-# 	"X-RapidAPI-Key": "b24a9ecf38mshc19aed2a1f0db70p195786jsn6cb1adf82282",
-# 	"X-RapidAPI-Host": "edamam-recipe-search.p.rapidapi.com"
-# }
-#
-# response = requests.request("GET", url, headers=headers, params=querystring)
-#
-# pprint(response.text)
+from exceprions import *
 
 
 class CocktailsAndGames:
@@ -113,6 +99,21 @@ class CocktailsAndGames:
 
 
 
+
+
+
+# url = "https://edamam-recipe-search.p.rapidapi.com/search"
+#
+# querystring = {"q":"pasta"}
+#
+# headers = {
+# 	"X-RapidAPI-Key": "b24a9ecf38mshc19aed2a1f0db70p195786jsn6cb1adf82282",
+# 	"X-RapidAPI-Host": "edamam-recipe-search.p.rapidapi.com"
+# }
+#
+# response = requests.request("GET", url, headers=headers, params=querystring)
+#
+# pprint(response.text)
 
 
 

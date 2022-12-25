@@ -1,6 +1,6 @@
-from E2 import CocktailsAndGames
+from CocktailsAndGames import CocktailsAndGames
 from general_func import *
-from exeprions import *
+from exceprions import *
 from pprint import pprint
 
 
