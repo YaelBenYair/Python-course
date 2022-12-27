@@ -9,7 +9,7 @@ from concurrent.futures import ThreadPoolExecutor, wait
 
 def aapl_filse(fpath):
     if not os.path.exists(fpath):
-        os.makedirs(fpath)
+        raise FileNotFoundError()
 
     executor = ThreadPoolExecutor()
     futures = []
