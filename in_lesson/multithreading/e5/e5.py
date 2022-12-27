@@ -11,7 +11,7 @@ def aapl_filse(fpath):
     if not os.path.exists(fpath):
         raise FileNotFoundError()
 
-    executor = ThreadPoolExecutor()
+    executor = ThreadPoolExecutor(max_workers=16)
     futures = []
 
     counter = 0
@@ -63,6 +63,11 @@ def aapl_filse(fpath):
 
                 date_year = date.year
 
+        avg = {'Date': 'Average', 'Low': low / counter, 'Open': open_aa / counter, 'Volume': vol / counter,
+               'High': high / counter, 'Close': close / counter, 'Adjusted Close': adjusted / counter}
+        file_path = os.path.join(os.path.dirname(fpath), f"{os.path.splitext(fpath)[0]}_{date_year}.csv")
+
+        futures.append(executor.submit(write_to_file, line, avg, file_path))
     done, not_done = wait(futures, return_when=concurrent.futures.ALL_COMPLETED)
     print(f"done: {len(done)}")
     print(f"not done: {len(not_done)}")
@@ -83,6 +88,6 @@ if __name__ == '__main__':
     end = datetime.datetime.utcnow()
     print(f"Time took: {(end - start).total_seconds()}s")
 
-    # done: 42
+    # done: 43
     # not done: 0
-    # Time took: 0.329149s
+    # Time took: 0.33813s
