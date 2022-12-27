@@ -56,6 +56,8 @@ class CocktailsAndGames:
 	def check_requests(result):
 		if result.status_code > 400:
 			raise StatusCodeError(result.status_code)
+		if result.text == "":
+			raise EmptyFolderError(result.status_code)
 
 	def get_cocktail_by_id(self, id_cockt: int) -> list:
 		url = f"http://www.thecocktaildb.com/api/json/v1/1/lookup.php?i={id_cockt}"
