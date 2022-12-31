@@ -1,4 +1,4 @@
-
+import pandas as pd
 import csv
 from csv import DictReader
 import datetime
@@ -50,12 +50,12 @@ def aapl_filse(fpath):
 
                 futures.append(executor.submit(write_to_file, line, avg, file_path))
 
-                open_aa += float(item['Open'])
-                vol += float(item['Volume'])
-                high += float(item['High'])
-                low += float(item['Low'])
-                close += float(item['Close'])
-                adjusted += float(item['Adjusted Close'])
+                open_aa = float(item['Open'])
+                vol = float(item['Volume'])
+                high = float(item['High'])
+                low = float(item['Low'])
+                close = float(item['Close'])
+                adjusted = float(item['Adjusted Close'])
 
                 line = [item]
 
@@ -80,6 +80,7 @@ def write_to_file(lines: list, avg: dict, file_path):
         for row in lines:
             writer.writerow(row)
         writer.writerow(avg)
+
 
 
 if __name__ == '__main__':
