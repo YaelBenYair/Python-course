@@ -194,7 +194,7 @@ class CsvFile(TextFile):
         with open(file_path_name, "w", newline="") as csv_f:
             writer = csv.DictWriter(csv_f, fieldnames=header1)
             writer.writeheader()
-
+        # [{name: bla, age: bla},{name: bla, age: bla}]
             for row in self.get_content():
                 writer.writerow(row)
             for row in other.get_content():

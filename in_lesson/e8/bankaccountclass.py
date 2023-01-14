@@ -11,6 +11,8 @@ class BankAccount:
         self.balance = 0
         self.transactions = []
         # self.rw_lock = rwlock.RWLockFairD()
+        # self.r_lock = self.rw_lock.gen_rlock()
+        # self.w_lock = self.rw_lock.gen_wlock()
         self.lock = threading.Lock()
 
     @staticmethod
@@ -20,14 +22,14 @@ class BankAccount:
 
     def deposit(self, amnt: int):
         self.is_number_positiv(amnt)
-        # with self.rw_lock.gen_wlock():
+        # with self.w_lock:
         with self.lock:
             self.balance += amnt
             self.transactions.append(f"deposit {amnt}{datetime.datetime.now().date()}")
 
     def withdraw(self, amnt: int):
         self.is_number_positiv(amnt)
-        # with self.rw_lock.gen_wlock():
+        # with self.w_lock:
         with self.lock:
             if self.balance >= amnt:
                 self.balance -= amnt
@@ -36,7 +38,7 @@ class BankAccount:
                 raise Exception()
 
     def get_balance(self):
-        # with self.rw_lock.gen_rlock()
+        # with self.r_lock:
         return self.balance
 
 
