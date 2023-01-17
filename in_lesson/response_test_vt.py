@@ -78,6 +78,10 @@ days_analysis = datetime.utcnow() - datetime.strptime(last_analysis_date, '%Y-%m
 print(datetime.utcnow() - datetime.strptime(last_analysis_date, '%Y-%m-%d %H:%M:%S'))
 t = timedelta(days=182)
 print(t > days_analysis)
+
+last_analysis_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+print(last_analysis_date)
+
 #
 #
 #
