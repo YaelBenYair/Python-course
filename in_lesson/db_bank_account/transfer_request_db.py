@@ -105,10 +105,6 @@ class Bank:
                     if from_func == 'get_id':
                         return func(table, column, num, cur)
 
-                    # add transfer to db
-                    elif from_func == 'add_trans':
-                        func(id_tup, amunt, cur)
-
                     # Checks if there is enough money to transfer
                     elif from_func == 'balance':
                         func(num, amunt, cur)
@@ -118,9 +114,36 @@ class Bank:
                         if not func(num, num2, cur):
                             raise Exception()
 
+                    # # Updates the request in the accounts
+                    # elif from_func in ('sender', 'receiver'):
+                    #     func(amunt, num, cur)
+                    #
+                    # # add transfer to db
+                    # elif from_func == 'add_trans':
+                    #     func(id_tup, amunt, cur)
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.commit()
+                conn.close()
+
+    def _transfer(self, amunt, sender, func_send, receiver, func_reci, id_tup, func_tran):
+        """
+        Main transfer sending insert
+        """
+        conn: psycopg2._psycopg.connection = None
+        try:
+            with psycopg2.connect(**self.params) as conn:
+                with conn.cursor() as cur:
+
                     # Updates the request in the accounts
-                    elif from_func in ('sender', 'receiver'):
-                        func(amunt, num, cur)
+                    func_send(amunt, sender, cur)
+                    func_reci(amunt, receiver, cur)
+
+                    # add transfer to db
+                    func_tran(id_tup, amunt, cur)
 
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
@@ -144,9 +167,10 @@ class Bank:
 
         self._sent_query(num=id_list[0], amunt=amunt, func=self._balance_check, from_func='balance')
         self._sent_query(num=count1, num2=customer_passport, func=self._account_holder_check, from_func='account_holder')
-        self._sent_query(amunt=amunt, num=id_list[0], func=self._sender, from_func='sender')
-        self._sent_query(amunt=amunt, num=id_list[1], func=self._receiver, from_func='receiver')
-        self._sent_query(id_tup=tuple(id_list), amunt=amunt, func=self._add_transfer_query, from_func='add_trans')
+        self._transfer(amunt=amunt, sender=id_list[0], func_send=self._sender, receiver=id_list[1],
+                         func_reci=self._receiver, id_tup=tuple(id_list), func_tran=self._add_transfer_query)
+        # self._sent_query(amunt=amunt, num=id_list[1], func=self._receiver, from_func='receiver')
+        # self._sent_query(id_tup=tuple(id_list), amunt=amunt, func=self._add_transfer_query, from_func='add_trans')
 
         print('the transaction completed successfully')
 
