@@ -180,65 +180,7 @@ if __name__ == '__main__':
     b = Bank()
     t = b.run(123, 456, 153462, 10000)
 
-    # def _sent_query(customer_passport, account1):
-    #     params = get_config()
-    #     conn: psycopg2._psycopg.connection = None
-    #     try:
-    #         with psycopg2.connect(**params) as conn:
-    #             with conn.cursor() as cur:
-    #                 query = f"""
-    #                         select c.passport_num, a.account_num
-    #                         from account_holders ah
-    #                         join customer c on ah.customer_id = c.id
-    #                         join account a on ah.account_id = a.id ;
-    #                         """
-    #                 cur.execute(query)
-    #                 result = cur.fetchall()
-    #                 for i in result:
-    #                     if customer_passport in i and account1 in i:
-    #                         return True
-    #                 return False
-    #
-    #     except (Exception, psycopg2.DatabaseError) as error:
-    #         print(error)
-    #     finally:
-    #         if conn is not None:
-    #             conn.commit()
-    #             conn.close()
-    #
-    # print(_sent_query(153462, 123))
-    # from_func = 'sender'
-    # print(from_func in ('sender', 'receiver'))
 
-
-
-    # for i in t:
-    #     if len(i) == 0:
-    #         print(False)
-    #     else:
-    #         print(i[0][0])
-    #
-    # li = [1, 2, 3]
-    # print(li)
-    # print(tuple(li))
-
-
-    # def add_transfer(self, id_tup: tuple, amunt: int):
-    #     conn: psycopg2._psycopg.connection = None
-    #     try:
-    #         with psycopg2.connect(**self.params) as conn:
-    #             with conn.cursor() as cur:
-    #                 query = f"""
-    #                         insert into transactions (coustomer_id, ts, amnt, tr_types, sender, receiver)
-    #                         values ({id_tup[2]},{datetime.datetime.now()},{amunt},'transfer',{id_tup[0]},{id_tup[1]});
-    #                         """
-    #                 cur.execute(query)
-    #     except (Exception, psycopg2.DatabaseError) as error:
-    #         print(error)
-    #     finally:
-    #         if conn is not None:
-    #             conn.commit()
-    #             conn.close()
 
 
 

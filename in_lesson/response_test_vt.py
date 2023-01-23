@@ -108,9 +108,15 @@ print(last_analysis_date)
 
 
 
+print(list(reversed(range(1,11))))
 
+n = [1,2,3,4]
+print(n[-2])
+print(5 != 6)
 
-
+import numpy as np
+a= np.array([1,2,3])
+b= np.array([5,6,7])
 
 
 
