@@ -1,8 +1,10 @@
+import datetime
 import random
 
 from flask import Flask, request, jsonify
 import psycopg2
 import json
+import re
 
 app = Flask("bank_web_app")
 
@@ -252,7 +254,8 @@ def get_accounts():
 def create_account():
     """
     The function create new customer
-    params: customer_id -> int: The customer for whom you want to open an account,
+    params: customer_id -> int: The customer for whom you want to open an account. if there number of customer it will
+            enter in thus pattern: 1,3,2 ,
             max_limit -> int, balance -> int
     """
     new_data = request.form
@@ -278,40 +281,103 @@ def create_account():
             if cur.rowcount == 1:
                 cur.execute(sql_id_account)
                 result = cur.fetchone()
-                cur.execute(sql_in_holders, (result[0], new_data['customer_id']))
+
+                for customer in new_data['customer_id'].split(","):
+                    cur.execute(sql_in_holders, (result[0], customer))
                 if cur.rowcount == 1:
                     return app.response_class(status=200)
     return app.response_class(status=500)
 
 
 @app.route("/api/v1/account/<int:account_id>/deposit", methods=['POST'])
-def deposit():
+def deposit(account_id):
     """
-    The function get from body (amount) and update the account balance
+    The function get from body (amount and customer id) and update the account balance
     """
-    # get balance
-    # balance + amount
-    # update balance
-    pass
+    new_data = request.form
+
+    sql = f"SELECT balance FROM account WHERE id = %s" % account_id
+    sql_update_balance = f"UPDATE account SET balance = %s WHERE id=%s"
+
+    with conn:
+        with conn.cursor() as cur:
+            cur.execute(sql)
+            result = cur.fetchone()
+
+            if re.match('[0-9]+$', f"{new_data['amount']}") is None:
+                return app.response_class(status=400)
+            new_balance = result[0] + int(new_data['amount'])
+            cur.execute(sql_update_balance, (new_balance, account_id))
+            if cur.rowcount == 1:
+                return app.response_class(status=200)
+    return app.response_class(status=500)
 
 
 @app.route("/api/v1/account/<int:account_id>/withdraw", methods=['POST'])
-def withdraw():
+def withdraw(account_id):
     """
-    The function get query param (amount) and update the account balance if it possible
+    The function get query param (amount and customer id) and update the account balance if it possible
     """
-    # get balance and max_limit
-    # balance vs amount
-    # balance - amount
-    # update balance
-    pass
+    new_data = request.form
+    ts = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    sql = f"SELECT balance, max_limit FROM account WHERE id = %s" % account_id
+    sql_update_balance = f"UPDATE account SET balance = %s WHERE id=%s"
+    sql_insert_transfer = f"""
+                insert into transactions (coustomer_id, ts, amnt, tr_types, sender)
+                values (%s, %s, %s, 'withdraw');
+                """
+
+    with conn:
+        with conn.cursor() as cur:
+            cur.execute(sql)
+            result = cur.fetchone()
+
+            if re.match('[0-9]+$', f"{new_data['amount']}") is None or result[0] - float(new_data['amount']) < result[1]:
+                return app.response_class(status=400)
+            new_balance = result[0] - int(new_data['amount'])
+            cur.execute(sql_update_balance, (new_balance, account_id))
+            cur.execute(sql_insert_transfer, (new_balance, account_id))
+            if cur.rowcount == 1:
+                return app.response_class(status=200)
+    return app.response_class(status=500)
 
 
 @app.route("/api/v1/account/<int:account_id>/transfer", methods=['POST'])
-def transfer():
+def transfer(account_id):
     """
-    The function get query param (amount and receiving account) and update the account balance if it possible
+    The function get query param (amount and receiving account and customer id -> The one who performs the transfer)
+    and update the account balance if it possible
     """
+    new_data = request.form
+    ts = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    sql = f"SELECT balance, max_limit FROM account WHERE id = %s"
+    sql_update_balance = f"UPDATE account SET balance = %s WHERE id=%s"
+    sql_insert_transfer = f"""
+            insert into transactions (coustomer_id, ts, amnt, tr_types, sender, receiver)
+            values (%s, %s, %s, 'transfer', %s, %s);
+            """
+
+    with conn:
+        with conn.cursor() as cur:
+            cur.execute(sql, (account_id,))
+            balance_sender_result = cur.fetchone()
+            cur.execute(sql, (new_data['receiving_account'],))
+            balance_sender_receiver = cur.fetchone()
+
+            if re.match('[0-9]+$', f"{new_data['amount']}") is None \
+                    or balance_sender_result[0] - float(new_data['amount']) < balance_sender_result[1]:
+                return app.response_class(status=400)
+            new_balance_sender = balance_sender_result[0] - int(new_data['amount'])
+            new_balance_receiver = balance_sender_receiver[0] + int(new_data['amount'])
+            cur.execute(sql_update_balance, (new_balance_sender, account_id))
+            cur.execute(sql_update_balance, (new_balance_receiver, account_id))
+            cur.execute(sql_insert_transfer, (new_data['coustomer_id'], ts, new_data['amount'],
+                                              account_id, new_data['receiving_account']))
+            if cur.rowcount == 3:
+                return app.response_class(status=200)
+    return app.response_class(status=500)
     # get customer id from account id
     # check amount vs balance
     # insert to transfer
