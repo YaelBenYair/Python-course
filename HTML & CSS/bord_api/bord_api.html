@@ -8,39 +8,18 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
    
-    <script>
-      function getData(event) {
-
-        event.preventDefault();
-        console.log(event)
-        // form = document.getElementById('my-form')
-        console.log(event.target)
-        fd = new FormData(event.target)
-
-        fetch("https://www.boredapi.com/api/activity/")
-        .then((response) => response.json())
-        .then((json) => {document.getElementById("p_1").innerHTML=json.activity
-      
-                        document.getElementById("p_2").innerHTML=json.type})
-
-        // console.log(retVal)
-      }
-
-      function grayLable() {
-        lab = document.getElementById('free_lab')
-
-        console.log(lab.value)
-
-        if (lab.style.color == 'black'){
-          lab.style.color = 'rgb(188, 188, 188)'}
-          else{lab.style.color = 'black'}
-      }
-    </script>
+    <script src="js/script.js"></script>
 
   </head>
 <body>
 
-  <form class="container-sm border p-5 my-5 round form_style" onsubmit="getData(event)">
+
+  <div id="pop_success" class="alert alert-success alert-dismissible invisible">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <strong>Success!</strong> This alert box could indicate a successful or positive action.
+  </div>
+
+  <form id="my_form" class="container-sm border p-5 my-5 round form_style" onsubmit="getData(event)">
 
     <!-- <label for="browser" class="form-label">Choose your activity type:</label>
     <select class="form-select">
@@ -51,7 +30,7 @@
     </select> -->
 
   <label for="sel1" class="form-label">Select your activity type:</label>
-  <select aria-valuenow="select" class="form-select" id="sel1" name="sellist1" >
+  <select aria-valuenow="select" class="form-select" id="sel1" name="type" >
     <option disabled selected>select</option>
     <option>education</option>
     <option>recreational</option>
@@ -77,21 +56,28 @@
 
 
   <div class="form-group">
-    <label for="formControlRange">Example Range input</label>
-    <input type="range" class="form-range" id="formControlRange" max="10" min="0" onInput="document.getElementById('rangeval').innerHTML = this.value" step="1">
+    <label for="formControlRange">Participantss</label>
+    <input type="range" class="form-range" name="participants" id="formControlRange" value="0" max="10" min="0" onInput="document.getElementById('rangeval').innerHTML = this.value" step="1">
     <span id="rangeval"></span>
   </div>
 
   <br>
 
-  <button type="submit" class="btn btn-outline-secondary">Send</button>
+  <button id="send_form" type="submit" class="btn btn-outline-secondary">Send</button>
 
   </form>
 
   <!-- <button onclick="getData()">get bored
 
   </button> -->
+
   
+  <div id="bord_list">
+    <ul id="activity_list" class="container-sm border p-5 my-5 round list-group">
+
+    </ul>
+
+  </div>
   <p
     id="p_1" ></p>
     <p
