@@ -5,6 +5,9 @@ function getData(event) {
 
     const but_send = document.getElementById('send_form')
     but_send.setAttribute('disabled', true)
+    but_send.innerHTML = 'Loading..'
+    const span_a = document.createElement('span')
+    span_a.setAttribute('class', 'spinner-border spinner-border-sm')
 
     let count = 0
     
@@ -48,29 +51,43 @@ function getData(event) {
         console.log(json)
 
         but_send.removeAttribute('disabled')
+        but_send.innerHTML = 'Send'
+        span_a.remove()
 
-        ul = document.getElementById('activity_list')
+        if (json.error == undefined){
 
-         const con = document.createElement('li')
-         con.setAttribute('class', 'row')
-         con.innerHTML = json.activity
-         con.style.marginBottom = '10px'
-         con.style.borderBottom = '2px solid #f2eeeb'
+          p1 = document.getElementById('p_1')
+          p1.innerHTML = ''
+          p1.removeAttribute('class')
 
-         const p = document.createElement('p')
-         p.setAttribute('class', 'col')
+          ul = document.getElementById('activity_list')
 
-         const but = document.createElement('button')
-         but.setAttribute('class', 'col-sm-3 col_button btn btn-outline-secondary')
-         but.innerHTML = 'X'
-         but.style.width = 'auto'
-         but.style.border = 'none'
+          const con = document.createElement('li')
+          con.setAttribute('class', 'row')
+          con.innerHTML = json.activity
+          con.style.marginBottom = '10px'
+          con.style.borderBottom = '2px solid #f2eeeb'
 
-         but.onclick = (event) => event.target.parentElement.remove()
+          const p = document.createElement('p')
+          p.setAttribute('class', 'col')
 
-         con.appendChild(p)
-         con.appendChild(but)
-         ul.appendChild(con)
+          const but = document.createElement('button')
+          but.setAttribute('class', 'col-sm-3 col_button btn btn-outline-secondary')
+          but.innerHTML = 'X'
+          but.style.width = 'auto'
+          but.style.border = 'none'
+
+          but.onclick = (event) => event.target.parentElement.remove()
+
+          con.appendChild(p)
+          con.appendChild(but)
+          ul.appendChild(con)
+        }else{
+          p1 = document.getElementById('p_1')
+          p1.innerHTML = json.error
+          p1.setAttribute('class', 'mx-auto shadow-sm p-4 mb-4 bg-white container-sm border')
+          p1.style.color = 'red'
+        }
         })
 
         // const pop = document.getElementById('pop_success')
@@ -80,6 +97,7 @@ function getData(event) {
 
 
     document.getElementById('my_form').reset()
+    document.getElementById('rangeval').innerHTML = 0
 
     // console.log(retVal)
   }
