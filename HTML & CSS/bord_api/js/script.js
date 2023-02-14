@@ -5,9 +5,13 @@ function getData(event) {
 
     const but_send = document.getElementById('send_form')
     but_send.setAttribute('disabled', true)
-    but_send.innerHTML = 'Loading..'
+    but_send.innerText = 'Loading..'
+    // const span_a = document.getElementById('spiner-span')
+    // span_a.removeAttribute('class')
+    // span_a.setAttribute('class', 'spinner-border spinner-border-sm')
     const span_a = document.createElement('span')
     span_a.setAttribute('class', 'spinner-border spinner-border-sm')
+    but_send.appendChild(span_a)
 
     let count = 0
     
@@ -51,8 +55,9 @@ function getData(event) {
         console.log(json)
 
         but_send.removeAttribute('disabled')
-        but_send.innerHTML = 'Send'
-        span_a.remove()
+        but_send.innerText = 'Send'
+        // span_a.removeAttribute('class')
+        // span_a.setAttribute('class', 'spinner-border spinner-border-sm invisible')
 
         if (json.error == undefined){
 
